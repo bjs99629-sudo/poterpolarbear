@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Software Engineer</title>
+    <!-- Tailwind CSS for rapid UI development -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@100;400;700&display=swap');
+        
+        body {
+            font-family: 'Pretendard', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #0f172a;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .skill-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-10px);
+            border-color: #60a5fa;
+            box-shadow: 0 10px 30px -10px rgba(96, 165, 250, 0.3);
+        }
+
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-slate-100">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-nav">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold tracking-tighter">
+                <span class="gradient-text">PORTFOLIO</span>
+            </a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-10 text-sm font-semibold uppercase tracking-widest">
+                <a href="#about" class="hover:text-blue-400 transition-colors">About</a>
+                <a href="#skills" class="hover:text-blue-400 transition-colors">Skills</a>
+                <a href="#projects" class="hover:text-blue-400 transition-colors">Projects</a>
+                <a href="#contact" class="hover:text-blue-400 transition-colors">Contact</a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="md:hidden text-2xl" id="menu-toggle">
+                <i class="fa-solid fa-bars-staggered" id="menu-icon"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed top-[65px] left-0 w-full h-0 bg-slate-900 overflow-hidden flex flex-col items-center justify-center space-y-8 text-xl font-bold transition-all duration-300">
+            <a href="#about" onclick="toggleMenu()">About</a>
+            <a href="#skills" onclick="toggleMenu()">Skills</a>
+            <a href="#projects" onclick="toggleMenu()">Projects</a>
+            <a href="#contact" onclick="toggleMenu()">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="min-h-screen flex items-center justify-center relative overflow-hidden px-6">
+        <!-- Background Decorations -->
+        <div class="absolute top-1/4 -left-20 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl"></div>
+
+        <div class="max-w-4xl text-center z-10">
+            <div class="inline-block px-4 py-1.5 mb-6 border border-blue-500/30 rounded-full bg-blue-500/5 text-blue-400 text-xs font-bold tracking-widest uppercase">
+                Software Engineering Graduate
+            </div>
+            <h1 class="text-5xl md:text-8xl font-black mb-8 leading-tight">
+                논리적인 코드로<br>
+                <span class="gradient-text">경험을 설계합니다</span>
+            </h1>
+            <p class="text-slate-400 text-lg md:text-2xl mb-12 max-w-2xl mx-auto leading-relaxed">
+                Java, C언어로 다진 탄탄한 기초부터 사용자 중심의 UI/UX 디자인까지,<br class="hidden md:block">
+                가치를 전달하는 소프트웨어를 개발합니다.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-5">
+                <a href="#projects" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg shadow-blue-600/20">
+                    프로젝트 살펴보기
+                </a>
+                <a href="#contact" class="bg-slate-800 hover:bg-slate-700 text-white px-10 py-4 rounded-xl font-bold transition-all border border-slate-700">
+                    연락하기
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="py-32 bg-slate-900/50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                    <div class="relative rounded-2xl overflow-hidden bg-slate-800 border border-slate-700">
+                        <div class="aspect-square flex items-center justify-center text-slate-700">
+                             <i class="fa-solid fa-code-merge text-[12rem] opacity-20 group-hover:scale-110 transition duration-700"></i>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-4xl font-bold mb-8">안녕하세요,<br><span class="text-blue-400">성장하고싶은 개발자</span> 변준석입니다.</h2>
+                    <p class="text-slate-400 text-lg leading-relaxed mb-8">
+                        소프트웨어학과를 전공하며 컴퓨터 사이언스의 본질에 집중했습니다. 
+                        C언어와 Java를 통해 알고리즘과 객체지향의 원리를 익혔고, 웹 기술을 통해 아이디어를 현실로 만드는 과정을 즐깁니다.
+                        단순히 코드를 짜는 것에 그치지 않고, <strong>UI/UX 디자인 감각</strong>을 더해 사용자가 머무르고 싶은 서비스를 만드는 것이 저의 목표입니다.
+                    </p>
+                    <ul class="space-y-4 text-slate-300">
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-check text-blue-500"></i>
+                            전공 지식 기반의 탄탄한 기본기 (Java, C)
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-check text-blue-500"></i>
+                            사용자 친화적인 인터페이스 설계 (UI/UX)
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-check text-blue-500"></i>
+                            데이터베이스 설계 및 최적화 (MySQL)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-32">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl font-bold mb-4">Core Technology</h2>
+                <div class="h-1 w-20 bg-blue-500 mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <!-- Skill 1 -->
+                <div class="skill-card bg-slate-800/40 p-10 rounded-3xl border border-slate-800 text-center">
+                    <div class="w-16 h-16 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-brands fa-java text-3xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">Java</h3>
+                    <p class="text-xs text-slate-500 uppercase tracking-widest">Back-end / OOP</p>
+                </div>
+                <!-- Skill 2 -->
+                <div class="skill-card bg-slate-800/40 p-10 rounded-3xl border border-slate-800 text-center">
+                    <div class="w-16 h-16 bg-yellow-500/10 text-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-brands fa-js text-3xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">JavaScript</h3>
+                    <p class="text-xs text-slate-500 uppercase tracking-widest">Dynamic Front-end</p>
+                </div>
+                <!-- Skill 3 -->
+                <div class="skill-card bg-slate-800/40 p-10 rounded-3xl border border-slate-800 text-center">
+                    <div class="w-16 h-16 bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-solid fa-database text-3xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">MySQL</h3>
+                    <p class="text-xs text-slate-500 uppercase tracking-widest">Database / SQL</p>
+                </div>
+                <!-- Skill 4 -->
+                <div class="skill-card bg-slate-800/40 p-10 rounded-3xl border border-slate-800 text-center">
+                    <div class="w-16 h-16 bg-slate-500/10 text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-solid fa-microchip text-3xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">C Language</h3>
+                    <p class="text-xs text-slate-500 uppercase tracking-widest">System / Algorithm</p>
+                </div>
+                <!-- Skill 5 -->
+                <div class="skill-card bg-slate-800/40 p-10 rounded-3xl border border-slate-800 text-center">
+                    <div class="w-16 h-16 bg-orange-500/10 text-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-brands fa-html5 text-3xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">HTML/CSS</h3>
+                    <p class="text-xs text-slate-500 uppercase tracking-widest">Publishing</p>
+                </div>
+                <!-- Skill 6 -->
+                <div class="skill-card bg-slate-800/40 p-10 rounded-3xl border border-slate-800 text-center">
+                    <div class="w-16 h-16 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-solid fa-wand-magic-sparkles text-3xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">UI/UX</h3>
+                    <p class="text-xs text-slate-500 uppercase tracking-widest">User Experience</p>
+                </div>
+                <!-- Skill 7 -->
+                <div class="skill-card bg-slate-800/40 p-10 rounded-3xl border border-slate-800 text-center">
+                    <div class="w-16 h-16 bg-cyan-500/10 text-cyan-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-brands fa-react text-3xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">React</h3>
+                    <p class="text-xs text-slate-500 uppercase tracking-widest">Web Library</p>
+                </div>
+                <!-- Skill 8 -->
+                <div class="skill-card bg-slate-800/40 p-10 rounded-3xl border border-slate-800 text-center">
+                    <div class="w-16 h-16 bg-white/5 text-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-brands fa-github text-3xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">Git</h3>
+                    <p class="text-xs text-slate-500 uppercase tracking-widest">Version Control</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-32 bg-slate-900/50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
+                <div>
+                    <h2 class="text-4xl font-bold mb-4">Featured Works</h2>
+                    <p class="text-slate-400">전공 과정 중 진행했던 핵심 프로젝트들입니다.</p>
+                </div>
+                <div class="text-blue-400 font-bold hover:underline cursor-pointer">
+                    GitHub에서 더보기 <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-10">
+                <!-- Project 1 -->
+                <div class="group bg-slate-800 border border-slate-700 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-blue-500/10 transition-all">
+                    <div class="h-64 bg-slate-700 relative overflow-hidden flex items-center justify-center">
+                        <i class="fa-solid fa-terminal text-7xl text-slate-600 opacity-50 group-hover:scale-110 transition duration-500"></i>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+                        <div class="absolute bottom-6 left-8">
+                            <span class="px-3 py-1 bg-blue-500 text-white text-[10px] font-bold rounded-md uppercase tracking-widest">Java & MySQL</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <h4 class="text-2xl font-bold mb-3">학사 정보 관리 시스템</h4>
+                        <p class="text-slate-400 mb-6 leading-relaxed">대학교 데이터베이스 수업의 결과물로, JDBC와 MySQL을 사용하여 학생/교수 시스템의 트랜잭션을 구현했습니다.</p>
+                        <div class="flex gap-4">
+                            <span class="text-sm font-bold text-slate-300">#JDBC</span>
+                            <span class="text-sm font-bold text-slate-300">#DatabaseDesign</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="group bg-slate-800 border border-slate-700 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-purple-500/10 transition-all">
+                    <div class="h-64 bg-slate-700 relative overflow-hidden flex items-center justify-center">
+                        <i class="fa-solid fa-laptop-code text-7xl text-slate-600 opacity-50 group-hover:scale-110 transition duration-500"></i>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+                        <div class="absolute bottom-6 left-8">
+                            <span class="px-3 py-1 bg-purple-500 text-white text-[10px] font-bold rounded-md uppercase tracking-widest">HTML / JS / UI Design</span>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <h4 class="text-2xl font-bold mb-3">반응형 대시보드 UI Kit</h4>
+                        <p class="text-slate-400 mb-6 leading-relaxed">사용성 테스트를 거친 UI 설계안을 바탕으로 제작된 프론트엔드 프로젝트입니다. 차트 시각화 및 다크모드를 지원합니다.</p>
+                        <div class="flex gap-4">
+                            <span class="text-sm font-bold text-slate-300">#VanillaJS</span>
+                            <span class="text-sm font-bold text-slate-300">#Responsive</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-32">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="bg-gradient-to-br from-blue-600 to-purple-700 rounded-[3rem] p-12 md:p-20 text-center shadow-2xl relative overflow-hidden">
+                <!-- Decoration -->
+                <div class="absolute top-0 right-0 p-10 opacity-10">
+                    <i class="fa-solid fa-paper-plane text-9xl -rotate-12"></i>
+                </div>
+
+                <h2 class="text-3xl md:text-5xl font-black text-white mb-6">함께 멋진 미래를 코딩해요!</h2>
+                <p class="text-white/80 text-lg mb-12">
+                    새로운 기술 습득에 주저함이 없는 열정적인 개발자입니다.<br>
+                    프로젝트 제안이나 협업 문의는 언제든 환영합니다.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row justify-center gap-6">
+                    <a href="mailto:your-email@example.com" class="bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-100 transition">
+                        <i class="fa-solid fa-envelope"></i> 이메일 보내기
+                    </a>
+                    <a href="https://github.com" class="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-black transition">
+                        <i class="fa-brands fa-github"></i> GitHub 방문
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-slate-800 text-center">
+        <p class="text-slate-500 text-sm">
+            &copy; 2024 Software Engineer Portfolio. Designed with <i class="fa-solid fa-heart text-red-500 mx-1"></i> by 변준석.
+        </p>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle Logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.style.height = '100vh';
+                menuIcon.classList.replace('fa-bars-staggered', 'fa-xmark');
+                document.body.style.overflow = 'hidden';
+            } else {
+                mobileMenu.style.height = '0';
+                menuIcon.classList.replace('fa-xmark', 'fa-bars-staggered');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+
+        // Scroll Animation (Simple)
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

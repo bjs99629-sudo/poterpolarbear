@@ -6,8 +6,6 @@
     <title>숲속의 스도쿠 (Forest Sudoku)</title>
     <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
     <style>
-
-       
         :root {
             --bg-color: #fdfae6;
             --board-bg: #89c168;
@@ -17,15 +15,21 @@
             --text-color: #5d4037;
             --border-color: #558b2f;
             --highlight: #fff59d;
+            --related-highlight: #f0f4c3;
+            --error-color: #e57373;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             margin: 0;
-            padding: 0;
+            padding: 20px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             min-height: 100vh;
             background-color: var(--bg-color);
             font-family: 'Gaegu', cursive;
@@ -41,56 +45,78 @@
 
         .header h1 {
             font-size: 3rem;
-            margin: 10px 0;
+            margin: 0;
             text-shadow: 2px 2px 0px white;
             color: #4a7c2c;
         }
 
         .leaf-icon {
-            width: 50px;
+            width: 40px;
+            height: 40px;
             fill: #7cb342;
+            vertical-align: middle;
+        }
+
+        .difficulty-selector {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .diff-btn {
+            padding: 5px 15px;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            background: white;
+            font-family: 'Gaegu', cursive;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .diff-btn.active {
+            background: var(--border-color);
+            color: white;
         }
 
         .container {
             background: var(--board-bg);
-            padding: 10px;
-            border-radius: 20px;
-            box-shadow: 0 10px 0 #558b2f, 0 15px 20px rgba(0,0,0,0.1);
+            padding: 8px;
+            border-radius: 15px;
+            box-shadow: 0 8px 0 #558b2f, 0 10px 20px rgba(0,0,0,0.1);
             position: relative;
+            max-width: 100%;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(9, 45px);
-            grid-template-rows: repeat(9, 45px);
-            border: 4px solid var(--border-color);
+            grid-template-columns: repeat(9, 1fr);
+            border: 3px solid var(--border-color);
             background: var(--border-color);
-            gap: 2px;
-        }
-
-        @media (max-width: 500px) {
-            .grid {
-                grid-template-columns: repeat(9, 35px);
-                grid-template-rows: repeat(9, 35px);
-            }
+            gap: 1px;
+            aspect-ratio: 1 / 1;
+            width: 400px;
+            max-width: 90vw;
         }
 
         .cell {
-            width: 100%;
-            height: 100%;
             background: var(--cell-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.15s;
             user-select: none;
+            position: relative;
         }
 
-        .cell:hover {
-            background: var(--highlight);
+        /* 3x3 Block Borders */
+        .cell:nth-child(3n) { border-right: 2px solid var(--border-color); }
+        .cell:nth-child(9n) { border-right: none; }
+        .cell:nth-child(n+19):nth-child(-n+27),
+        .cell:nth-child(n+46):nth-child(-n+54) {
+            border-bottom: 2px solid var(--border-color);
         }
 
         .cell.fixed {
@@ -98,37 +124,40 @@
             color: #2e7d32;
         }
 
-        .cell.selected {
-            background: #ffe082 !important;
-            outline: 3px inset #ffa000;
+        .cell.related {
+            background: var(--related-highlight);
         }
 
-        /* Thick borders for 3x3 zones */
-        .cell:nth-child(3n) { border-right: 2px solid var(--border-color); }
-        .cell:nth-child(9n) { border-right: none; }
-        .grid > .cell:nth-child(n+19):nth-child(-n+27),
-        .grid > .cell:nth-child(n+46):nth-child(-n+54) {
-            border-bottom: 2px solid var(--border-color);
+        .cell.selected {
+            background: #ffe082 !important;
+            z-index: 2;
+            box-shadow: inset 0 0 0 3px #ffa000;
+        }
+
+        .cell.error {
+            color: var(--error-color);
         }
 
         .controls {
-            margin-top: 30px;
+            margin-top: 25px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
+            width: 100%;
+            max-width: 400px;
         }
 
         .numpad {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 10px;
+            width: 100%;
         }
 
         .btn-num {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            aspect-ratio: 1/1;
+            border-radius: 12px;
             border: none;
             background: white;
             box-shadow: 0 4px 0 #ddd;
@@ -136,17 +165,26 @@
             font-family: 'Gaegu', cursive;
             cursor: pointer;
             color: var(--text-color);
-            transition: transform 0.1s, box-shadow 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-num:active {
-            transform: translateY(4px);
-            box-shadow: 0 0 0 #ddd;
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #ddd;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            width: 100%;
         }
 
         .btn-action {
-            padding: 10px 25px;
-            border-radius: 30px;
+            flex: 1;
+            padding: 12px;
+            border-radius: 20px;
             border: none;
             background: var(--accent-color);
             color: white;
@@ -154,35 +192,38 @@
             font-family: 'Gaegu', cursive;
             cursor: pointer;
             box-shadow: 0 4px 0 #d35400;
+            transition: transform 0.1s;
         }
 
         .btn-action:active {
-            transform: translateY(4px);
-            box-shadow: 0 0 0 #d35400;
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #d35400;
         }
 
         .message-box {
             position: fixed;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             background: white;
             padding: 30px;
             border-radius: 25px;
             border: 6px solid var(--board-bg);
-            box-shadow: 0 0 50px rgba(0,0,0,0.2);
+            box-shadow: 0 0 50px rgba(0,0,0,0.3);
             text-align: center;
             display: none;
             z-index: 100;
+            width: 80%;
+            max-width: 320px;
         }
 
         .overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.5);
             display: none;
             z-index: 90;
         }
+        
         .home-link {
             position: absolute;
             top: 15px;
@@ -201,18 +242,30 @@
             gap: 5px;
             font-size: 1.1rem;
         }
+
+        .home-link:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #2e4d1b;
+        }
     </style>
 </head>
 <body>
-    
-<a href="https://bjs99629-sudo.github.io/poterpolarbear/index.html#projects" class="hover:text-blue-400 transition-colors">Home</a>
-    
+
+<a href="https://bjs99629-sudo.github.io/poterpolarbear/index.html#projects" class="home-link">
+    <span>🏠</span> 홈으로
+</a>
+
 <div class="header">
     <svg class="leaf-icon" viewBox="0 0 24 24">
         <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z" />
     </svg>
     <h1>숲속의 스도쿠</h1>
-    <p>나뭇잎을 채워 스도쿠를 완성해 보세요!</p>
+</div>
+
+<div class="difficulty-selector">
+    <button class="diff-btn active" onclick="setDifficulty('easy', this)">쉬움</button>
+    <button class="diff-btn" onclick="setDifficulty('medium', this)">보통</button>
+    <button class="diff-btn" onclick="setDifficulty('hard', this)">어려움</button>
 </div>
 
 <div class="container">
@@ -232,7 +285,7 @@
         <button class="btn-num" onclick="inputNumber(9)">9</button>
         <button class="btn-num" onclick="inputNumber(0)" style="font-size: 1rem;">지우기</button>
     </div>
-    <div style="display: flex; gap: 10px;">
+    <div class="actions">
         <button class="btn-action" onclick="generateNewGame()">새 게임</button>
         <button class="btn-action" style="background-color: #7cb342; box-shadow: 0 4px 0 #558b2f;" onclick="checkSolution()">정답 확인</button>
     </div>
@@ -246,11 +299,12 @@
 </div>
 
 <script>
-    let selectedCell = null;
-    let board = [];
-    let initialBoard = [];
+    let selectedIdx = null;
+    let solution = [];
+    let currentBoard = [];
+    let isFixed = Array(81).fill(false);
+    let difficulty = 'easy';
 
-    // Initialize the grid
     const gridElement = document.getElementById('grid');
 
     function createGrid() {
@@ -259,97 +313,161 @@
             const cell = document.createElement('div');
             cell.classList.add('cell');
             cell.dataset.index = i;
-            cell.addEventListener('click', () => selectCell(cell));
+            cell.addEventListener('click', () => selectCell(i));
             gridElement.appendChild(cell);
         }
     }
 
-    function selectCell(cell) {
-        if (selectedCell) selectedCell.classList.remove('selected');
-        selectedCell = cell;
-        selectedCell.classList.add('selected');
+    function selectCell(idx) {
+        selectedIdx = idx;
+        const cells = document.querySelectorAll('.cell');
+        const row = Math.floor(idx / 9);
+        const col = idx % 9;
+
+        cells.forEach((cell, i) => {
+            cell.classList.remove('selected', 'related');
+            const r = Math.floor(i / 9);
+            const c = i % 9;
+            
+            // Highlight related row, column and 3x3 block
+            if (i === idx) {
+                cell.classList.add('selected');
+            } else if (r === row || c === col || (Math.floor(r/3) === Math.floor(row/3) && Math.floor(c/3) === Math.floor(col/3))) {
+                cell.classList.add('related');
+            }
+        });
     }
 
     function inputNumber(num) {
-        if (!selectedCell || selectedCell.classList.contains('fixed')) return;
+        if (selectedIdx === null || isFixed[selectedIdx]) return;
         
-        const idx = parseInt(selectedCell.dataset.index);
-        const val = num === 0 ? "" : num;
+        currentBoard[selectedIdx] = num;
+        const cell = document.querySelector(`.cell[data-index="${selectedIdx}"]`);
+        cell.innerText = num === 0 ? "" : num;
         
-        selectedCell.innerText = val;
-        board[idx] = num === 0 ? 0 : num;
+        // Basic real-time conflict hint (optional, but nice)
+        validateCell(selectedIdx);
     }
 
-    // Very simple Sudoku Generator (Mock for this implementation)
-    // In a production app, we would use a more robust backtracking algorithm
+    function validateCell(idx) {
+        const val = currentBoard[idx];
+        const cell = document.querySelector(`.cell[data-index="${idx}"]`);
+        cell.classList.remove('error');
+        
+        if (val === 0) return;
+
+        // Check conflicts in row, col, block
+        const r = Math.floor(idx / 9);
+        const c = idx % 9;
+        let conflict = false;
+
+        for (let i = 0; i < 81; i++) {
+            if (i === idx) continue;
+            const ir = Math.floor(i / 9);
+            const ic = i % 9;
+            if (currentBoard[i] === val) {
+                if (ir === r || ic === c || (Math.floor(ir/3) === Math.floor(r/3) && Math.floor(ic/3) === Math.floor(c/3))) {
+                    conflict = true;
+                    break;
+                }
+            }
+        }
+        if (conflict) cell.classList.add('error');
+    }
+
+    function setDifficulty(level, btn) {
+        difficulty = level;
+        document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        generateNewGame();
+    }
+
+    // --- Sudoku Logic ---
+
+    function isValid(board, row, col, num) {
+        for (let x = 0; x < 9; x++) if (board[row * 9 + x] === num) return false;
+        for (let x = 0; x < 9; x++) if (board[x * 9 + col] === num) return false;
+        let startRow = row - row % 3, startCol = col - col % 3;
+        for (let i = 0; i < 3; i++)
+            for (let j = 0; j < 3; j++)
+                if (board[(i + startRow) * 9 + (j + startCol)] === num) return false;
+        return true;
+    }
+
+    function solveSudoku(board) {
+        for (let i = 0; i < 81; i++) {
+            if (board[i] === 0) {
+                let row = Math.floor(i / 9);
+                let col = i % 9;
+                let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5);
+                for (let num of nums) {
+                    if (isValid(board, row, col, num)) {
+                        board[i] = num;
+                        if (solveSudoku(board)) return true;
+                        board[i] = 0;
+                    }
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+
     function generateNewGame() {
-        // Base solution to shuffle
-        const base = [
-            5, 3, 4, 6, 7, 8, 9, 1, 2,
-            6, 7, 2, 1, 9, 5, 3, 4, 8,
-            1, 9, 8, 3, 4, 2, 5, 6, 7,
-            8, 5, 9, 7, 6, 1, 4, 2, 3,
-            4, 2, 6, 8, 5, 3, 7, 9, 1,
-            7, 1, 3, 9, 2, 4, 8, 5, 6,
-            9, 6, 1, 5, 3, 7, 2, 8, 4,
-            2, 8, 7, 4, 1, 9, 6, 3, 5,
-            3, 4, 5, 2, 8, 6, 1, 7, 9
-        ];
+        // Reset state
+        solution = Array(81).fill(0);
+        solveSudoku(solution);
         
-        // Basic "Shuffling" (simple version)
-        board = [...base];
-        initialBoard = Array(81).fill(0);
-        
+        currentBoard = [...solution];
+        isFixed = Array(81).fill(true);
+
+        // Determine how many to remove
+        let attempts = 40;
+        if (difficulty === 'medium') attempts = 50;
+        if (difficulty === 'hard') attempts = 60;
+
+        while (attempts > 0) {
+            let idx = Math.floor(Math.random() * 81);
+            if (currentBoard[idx] !== 0) {
+                currentBoard[idx] = 0;
+                isFixed[idx] = false;
+                attempts--;
+            }
+        }
+
+        // Update UI
         const cells = document.querySelectorAll('.cell');
         cells.forEach((cell, i) => {
-            cell.classList.remove('fixed', 'selected');
-            // Randomly hide about 50% of cells
-            if (Math.random() > 0.4) {
-                cell.innerText = board[i];
+            cell.classList.remove('fixed', 'selected', 'related', 'error');
+            if (isFixed[i]) {
+                cell.innerText = currentBoard[i];
                 cell.classList.add('fixed');
-                initialBoard[i] = board[i];
             } else {
                 cell.innerText = "";
-                board[i] = 0;
             }
         });
-        
-        selectedCell = null;
+        selectedIdx = null;
     }
 
     function checkSolution() {
-        // Simple check: are there any zeros?
-        if (board.includes(0)) {
-            showMessage("아직 비어있는 칸이 있어요!", "모든 칸을 채워야 정답을 확인할 수 있어요.");
+        if (currentBoard.includes(0)) {
+            showMessage("아직 빈칸이 있어요!", "모든 칸을 채운 뒤에 확인 버튼을 눌러주세요.");
             return;
         }
 
-        // Validate rows, columns, and 3x3 grids (basic logic)
-        const isValid = validateSudoku(board);
-        if (isValid) {
-            showMessage("완벽해요!", "정말 대단한 실력이네요! 숲속 친구들이 기뻐해요.");
+        let win = true;
+        for(let i=0; i<81; i++) {
+            if (currentBoard[i] !== solution[i]) {
+                win = false;
+                break;
+            }
+        }
+
+        if (win) {
+            showMessage("완벽해요!", "숲속의 평화가 다시 찾아왔어요! 당신은 정말 똑똑하군요.");
         } else {
-            showMessage("어라라...?", "어딘가 틀린 부분이 있는 것 같아요. 다시 확인해 볼까요?");
+            showMessage("어라라...?", "틀린 숫자가 있는 것 같아요. 빨간색 글씨가 있는지 다시 확인해 볼까요?");
         }
-    }
-
-    function validateSudoku(arr) {
-        const check = (vals) => {
-            const s = new Set(vals.filter(v => v !== 0));
-            return s.size === 9;
-        };
-
-        // Rows
-        for (let i = 0; i < 9; i++) {
-            if (!check(arr.slice(i * 9, i * 9 + 9))) return false;
-        }
-        // Cols
-        for (let i = 0; i < 9; i++) {
-            let col = [];
-            for (let j = 0; j < 9; j++) col.push(arr[i + j * 9]);
-            if (!check(col)) return false;
-        }
-        return true;
     }
 
     function showMessage(title, content) {
@@ -370,12 +488,22 @@
             inputNumber(parseInt(e.key));
         } else if (e.key === 'Backspace' || e.key === 'Delete' || e.key === '0') {
             inputNumber(0);
+        } else if (e.key.startsWith('Arrow') && selectedIdx !== null) {
+            let r = Math.floor(selectedIdx / 9);
+            let c = selectedIdx % 9;
+            if (e.key === 'ArrowUp') r = (r + 8) % 9;
+            if (e.key === 'ArrowDown') r = (r + 1) % 9;
+            if (e.key === 'ArrowLeft') c = (c + 8) % 9;
+            if (e.key === 'ArrowRight') c = (c + 1) % 9;
+            selectCell(r * 9 + c);
         }
     });
 
-    // Start game
-    createGrid();
-    generateNewGame();
+    // Start initialization
+    window.onload = () => {
+        createGrid();
+        generateNewGame();
+    };
 
 </script>
 
